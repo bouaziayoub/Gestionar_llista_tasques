@@ -19,6 +19,7 @@ add.addEventListener("click", () => {
     task.value = "";
     addCheckbox(li);
     addDeleteButton(li);
+    editTask(li);
     alert("Tasca afegida correctament");
   }
 });
@@ -29,8 +30,8 @@ function addCheckbox(li) {
   checkbox.type = "checkbox";
   li.prepend(checkbox);
 
-  // Función para manejar el cambio de line-throug 
-  const lineThroug = () => {
+  // Función para manejar el cambio de line-throug
+  const lineThrough = () => {
     const isChecked = checkbox.checked;
     li.style.textDecoration = isChecked ? "line-through" : "none";
     // color al line-through
@@ -38,20 +39,54 @@ function addCheckbox(li) {
   };
 
   // Agregar un event listener para marcar la tarea como completada
-  li.addEventListener("click", () => {
+  li.addEventListener("click", (event) => {
+    event.stopPropagation(); // Detiene la propagación del evento
     checkbox.checked = !checkbox.checked;
-    // Llamar a la función lineThroug
-    lineThroug();
+    // Llamar a la función lineThrough
+    lineThrough();
   });
 }
 
+
 // Afegeix el boton d'eliminar
 function addDeleteButton(li) {
-  const button = document.createElement("button");
-  button.classList.add("delete");
-  button.textContent = "Eliminar";
-  li.appendChild(button);
-  button.addEventListener("click", () => {
+  const buttonDelete = document.createElement("img");
+  buttonDelete.classList.add("btnDelete");
+  buttonDelete.src = "img/delete.png";
+  li.appendChild(buttonDelete);
+  buttonDelete.addEventListener("click", () => {
     li.remove();
+  });
+}
+
+// Editar tasca
+function editTask(li) {
+  const btnEdit = document.createElement("img");
+  btnEdit.classList.add("btnEdit");
+  btnEdit.src = "img/edit.png";
+  li.style.textDecoration = "none";
+  // color al line-through
+  li.style.color = "black";
+  li.appendChild(btnEdit);
+  btnEdit.addEventListener("click", () => {
+    const text = li.textContent;
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = text;
+    li.textContent = "";
+    li.appendChild(input);
+    input.focus();
+    input.addEventListener("blur", () => {
+      if (!input.value) {
+        li.textContent = text;
+      } else {
+        li.textContent = input.value;
+      }
+      addCheckbox(li);
+      addDeleteButton(li);
+      editTask(li);
+    });
+
+  
   });
 }

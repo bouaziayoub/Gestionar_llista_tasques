@@ -53,7 +53,7 @@ ul {
 }
 
 li {
-  padding: 15px;
+  padding: 20px;
   border-bottom: 1px solid #ccc;
   cursor: pointer;
 }
@@ -66,19 +66,27 @@ input[type="checkbox"] {
   margin-right: 10px;
 }
 
-.delete {
-  padding: 5px 10px;
-  font-size: 14px;
-  background-color: #b11928;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.btnDelete {
+  width: 27px;
+  float: right;
+  margin-left: 10px;
+}
+
+.btnDelete:hover {
+  width: 30px;
+  border: #6d6c6c solid 2px;
+  border-radius: 50%;
+}
+
+.btnEdit {
+  width: 27px;
   float: right;
 }
 
-.delete:hover {
-  background-color: #834047;
+.btnEdit:hover, .btnEdit.active {
+  width: 30px;
+  border: #6d6c6c solid 2px;
+  border-radius: 50%;
 }
 
 .error {
