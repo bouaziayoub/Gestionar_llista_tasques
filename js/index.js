@@ -4,6 +4,8 @@ const add = document.getElementById("add");
 const list = document.getElementById("list");
 const error = document.querySelector(".error");
 
+const tasks = [];
+
 // Afegeix la tasca
 add.addEventListener("click", () => {
   // Si el input esta vacio que me mueste un mensaje de error
@@ -21,6 +23,16 @@ add.addEventListener("click", () => {
     addDeleteButton(li);
     editTask(li);
     alert("Tasca afegida correctament");
+    // Guardar la tasca en el array tasks
+    tasks.push(li.textContent);
+    // Guardar la tasca en el localStorage sin sobreescribir las tareas anteriores que ya estaban guardadas en el localStorage (si las hay)
+    if (localStorage.getItem("tasks")) {
+      const tasks = JSON.parse(localStorage.getItem("tasks"));
+      tasks.push(li.textContent);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    } else {
+      localStorage.setItem("tasks", JSON.stringify([li.textContent]));
+    }
   }
 });
 
@@ -47,7 +59,6 @@ function addCheckbox(li) {
   });
 }
 
-
 // Afegeix el boton d'eliminar
 function addDeleteButton(li) {
   const buttonDelete = document.createElement("img");
@@ -56,6 +67,12 @@ function addDeleteButton(li) {
   li.appendChild(buttonDelete);
   buttonDelete.addEventListener("click", () => {
     li.remove();
+    // Eliminar la tarea del array tasks en localStorage
+    const tasks = JSON.parse(localStorage.getItem("tasks"));
+    const index = tasks.indexOf(li.textContent);
+    tasks.splice(index, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    
   });
 }
 
@@ -85,8 +102,26 @@ function editTask(li) {
       addCheckbox(li);
       addDeleteButton(li);
       editTask(li);
+      // Actualizar la tarea en el array tasks en localStorage
+      const tasks = JSON.parse(localStorage.getItem("tasks"));
+      const index = tasks.indexOf(text);
+      tasks[index] = li.textContent;
+      localStorage.setItem("tasks", JSON.stringify(tasks));
     });
-
-  
   });
 }
+
+// Cargar las tareas guardadas en el localStorage
+document.addEventListener("DOMContentLoaded", () => {
+  const tasks = JSON.parse(localStorage.getItem("tasks"));
+  if (tasks) {
+    tasks.forEach((task) => {
+      const li = document.createElement("li");
+      li.textContent = task;
+      list.appendChild(li);
+      addCheckbox(li);
+      addDeleteButton(li);
+      editTask(li);
+    });
+  }
+});
